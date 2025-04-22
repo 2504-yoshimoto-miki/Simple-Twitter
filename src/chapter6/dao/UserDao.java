@@ -188,7 +188,7 @@ public class UserDao {
     	        sql.append("    email = ?, ");
     	        if(!StringUtils.isBlank(password)) {
     	        	sql.append("    password = ?, ");
-    	    	}
+    	        }
     	        sql.append("    description = ?, ");
     	        sql.append("    updated_date = CURRENT_TIMESTAMP ");
     	        sql.append("WHERE id = ?");
@@ -200,12 +200,12 @@ public class UserDao {
     	        ps.setString(3, user.getEmail());
     	        if(!StringUtils.isBlank(password)) {
     	        	ps.setString(4, user.getPassword());
-    	        ps.setString(5, user.getDescription());
-    	        ps.setInt(6, user.getId());
-    	        }else {
-    	        	ps.setString(4, user.getDescription());
+	    	        ps.setString(5, user.getDescription());
+	    	        ps.setInt(6, user.getId());
+	    	    }else {
+	    	    	ps.setString(4, user.getDescription());
         	        ps.setInt(5, user.getId());
-    	        }
+        	    }
 
     	        int count = ps.executeUpdate();
     	        if (count == 0) {
