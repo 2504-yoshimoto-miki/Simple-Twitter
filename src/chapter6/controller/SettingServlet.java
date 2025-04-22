@@ -37,12 +37,12 @@ public class SettingServlet extends HttpServlet {
         application.init();
 
     }
-
+    /*設定画面を表示*/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         HttpSession session = request.getSession();
@@ -53,11 +53,13 @@ public class SettingServlet extends HttpServlet {
         request.setAttribute("user", user);
         request.getRequestDispatcher("setting.jsp").forward(request, response);
     }
+
+    /*設定を変更(更新)*/
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         HttpSession session = request.getSession();
@@ -66,7 +68,10 @@ public class SettingServlet extends HttpServlet {
         User user = getUser(request);
         if (isValid(user, errorMessages)) {
             try {
+
+            	/*serviceを呼出し*/
                 new UserService().update(user);
+
             } catch (NoRowsUpdatedRuntimeException e) {
 		    log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
                 errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
@@ -84,10 +89,11 @@ public class SettingServlet extends HttpServlet {
         response.sendRedirect("./");
     }
 
+    /*入力情報の取得　※request→user(bean)に詰めて、返却*/
     private User getUser(HttpServletRequest request) throws IOException, ServletException {
 
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         User user = new User();
@@ -100,10 +106,11 @@ public class SettingServlet extends HttpServlet {
         return user;
     }
 
+    /*バリデーション(check)*/
     private boolean isValid(User user, List<String> errorMessages) {
 
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         String name = user.getName();
@@ -118,9 +125,6 @@ public class SettingServlet extends HttpServlet {
             errorMessages.add("アカウント名を入力してください");
         } else if (20 < account.length()) {
             errorMessages.add("アカウント名は20文字以下で入力してください");
-        }
-        if (StringUtils.isEmpty(password)) {
-            errorMessages.add("パスワードを入力してください");
         }
         if (!StringUtils.isEmpty(email) && (50 < email.length())) {
             errorMessages.add("メールアドレスは50文字以下で入力してください");

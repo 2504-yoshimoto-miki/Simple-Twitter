@@ -32,11 +32,15 @@ public class UserMessageDao {
 
     }
 
+    //引数idも追加
     public List<UserMessage> select(Connection connection, int num) {
 
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
+	  /* idがnullだったら全件取得する
+	    * idがnull以外だったら、その値に対応するユーザーIDの投稿を取得する
+	    */
         PreparedStatement ps = null;
         try {
             StringBuilder sql = new StringBuilder();

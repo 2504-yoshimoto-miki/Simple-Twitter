@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.dao.UserDao;
 import chapter6.logging.InitApplication;
@@ -33,7 +35,7 @@ public class UserService {
     public void insert(User user) {
 
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         Connection connection = null;
@@ -59,7 +61,7 @@ public class UserService {
     }
     public User select(String accountOrEmail, String password) {
 
-  	  log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+  	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
           " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
           Connection connection = null;
@@ -87,7 +89,7 @@ public class UserService {
     public User select(int userId) {
 
 
-        log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+        log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         Connection connection = null;
@@ -109,18 +111,26 @@ public class UserService {
             close(connection);
         }
     }
+
+    /*user設定の更新*/
     public void update(User user) {
 
-        log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
+        log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         Connection connection = null;
+        String password = user.getPassword();
         try {
-            // パスワード暗号化
-            String encPassword = CipherUtil.encrypt(user.getPassword());
-            user.setPassword(encPassword);
+
+        	if(!StringUtils.isBlank(password)) {
+        		 // パスワード暗号化
+                String encPassword = CipherUtil.encrypt(user.getPassword());
+                user.setPassword(encPassword);
+        	}
 
             connection = getConnection();
+
+            /*dao呼出し*/
             new UserDao().update(connection, user);
             commit(connection);
         } catch (RuntimeException e) {

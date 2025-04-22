@@ -64,6 +64,10 @@ public class MessageService {
           Connection connection = null;
           try {
               connection = getConnection();
+              /*Integer id = null;
+              if(!StringUtils.isEmpty(userId)) {
+                  id = Integer.parseInt(userId);
+              }*/
               List<UserMessage> messages = new UserMessageDao().select(connection, LIMIT_NUM);
               commit(connection);
 
