@@ -77,9 +77,15 @@
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 					<div>
+					<!-- 編集ボタン -->
+						<!-- messageのuser_idとloginUserのidが一致すれば表示 -->
 						<c:if test="${ message.userId == loginUser.id }">
+							<form action="edit" method="get">
+								<input name="id" value="${message.id}" type="hidden" >
+								<input type="submit" value="編集">
+							</form>
 							<form action="deleteMessage" method="post">
-								<input name="id" value="${message.userId}" type="hidden" >
+								<input name="id" value="${message.id}" type="hidden" >
 								<input type="submit" value="削除">
 							</form>
 						</c:if>
