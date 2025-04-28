@@ -122,7 +122,7 @@ public class MessageService {
 		}
 	}
 
-	public UserMessage select(Message message) {
+	public Message select(Message messageId) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -132,9 +132,9 @@ public class MessageService {
 		Connection connection = null;
 		try {
 			connection = getConnection();
-			UserMessage userMessage = new MessageDao().select(connection, message);
+			Message message = new MessageDao().select(connection, messageId);
 			commit(connection);
-			return userMessage;
+			return message;
 		} catch (RuntimeException e) {
 			rollback(connection);
 			log.log(Level.SEVERE, new Object() {

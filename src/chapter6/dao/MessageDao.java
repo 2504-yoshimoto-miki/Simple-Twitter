@@ -6,11 +6,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import chapter6.beans.Message;
-import chapter6.beans.UserMessage;
 import chapter6.exception.SQLRuntimeException;
 import chapter6.logging.InitApplication;
 
@@ -91,8 +92,34 @@ public class MessageDao {
         }
 	}
 
+	private List<Message> toMessage(ResultSet rs) throws SQLException {
+
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		List<Message> messages = new ArrayList<Message>();
+
+		try {
+			while (rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("id"));
+				message.setUserId(rs.getInt("user_id"));
+				message.setText(rs.getString("text"));
+				message.setCreatedDate(rs.getTimestamp("created_date"));
+				message.setUpdatedDate(rs.getTimestamp("updated_date"));
+
+				messages.add(message);
+			}
+			return messages;
+		} finally {
+			close(rs);
+		}
+	}
+
 	//つぶやき編集のためにidとuser_idが紐づくつぶやき参照
-	public UserMessage select(Connection connection, Message message) {
+	public Message select(Connection connection, Message messageId) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -107,11 +134,14 @@ public class MessageDao {
 			ps = connection.prepareStatement(sql.toString());
 
 			//バインド変数へserviceから受け取ったmessageの値を入れる
-			ps.setInt(1, message.getUserId());
+			ps.setInt(1, messageId.getUserId());
 
 			//SQL実行
 			ResultSet rs = ps.executeQuery();
-			return ;
+			List<Message> messages = toMessage(rs);
+			//edit.jspのテキストボックスに（編集前の）つぶやき表示が必要
+			//→戻り値
+			return messages.get(0);
 		} catch (SQLException e) {
 		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
             throw new SQLRuntimeException(e);
@@ -141,7 +171,7 @@ public class MessageDao {
 			ps = connection.prepareStatement(sql.toString());
 
 			ps.setString(1, message.getText());
-			ps.setInt(1, message.getUserId());
+			ps.setInt(2, message.getUserId());
 
 			//SQL実行
 			ps.executeUpdate();
