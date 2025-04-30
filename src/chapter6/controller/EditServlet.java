@@ -35,16 +35,16 @@ public class EditServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
+		HttpSession session = request.getSession();
 		//つぶやきのIDを取得
 		String id = request.getParameter("id");
 
-		//IDが数字かどうかチェック
-		if (!id.matches("^[0-9]+$")) {
+		//IDが数字かどうか&URLのID削除したとき
+		if ((!id.matches("^[0-9]+$")) && StringUtils.isBlank(id)) {
 			List<String> errorMessages = new ArrayList<String>();
 
 			errorMessages.add("不正なパラメータが入力されました");
 
-			HttpSession session = request.getSession();
 			session.setAttribute("errorMessages", errorMessages);
 			response.sendRedirect("./");
 			return;
@@ -55,8 +55,18 @@ public class EditServlet extends HttpServlet {
 
 		//serviceへ渡す
 		Message message = new MessageService().select(messageId);
+
 		//URLに存在しないつぶやきのIDが入力されたらエラーメッセージ
-		HttpSession session = request.getSession();
+		if (message == null) {
+			List<String> errorMessages = new ArrayList<String>();
+
+			errorMessages.add("不正なパラメータが入力されました");
+
+			session.setAttribute("errorMessages", errorMessages);
+			response.sendRedirect("./");
+			return;
+		}
+
 		User loginUser = (User) session.getAttribute("loginUser");
 		if (message.getUserId() != loginUser.getId()) {
 			List<String> errorMessages = new ArrayList<String>();

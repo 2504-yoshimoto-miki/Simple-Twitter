@@ -35,6 +35,5 @@ public class DeleteMessageServlet extends HttpServlet {
 
 		new MessageService().delete(id);
 		response.sendRedirect("./");
-		return;
 	}
 }
