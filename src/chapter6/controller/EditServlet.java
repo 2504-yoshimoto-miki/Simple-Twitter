@@ -85,9 +85,9 @@ public class EditServlet extends HttpServlet {
 		int id = (Integer.parseInt(request.getParameter("id")));
 
 		//messageへ取得した値を格納
-			Message message = new Message();
-			message.setText(text);
-			message.setUserId(id);
+		Message message = new Message();
+		message.setText(text);
+		message.setUserId(id);
 
 		//バリデーション
 		if (!isValid(text, errorMessages)) {
