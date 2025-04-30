@@ -67,7 +67,7 @@ public class MessageDao {
         }
     }
 
-	public void delete(Connection connection, Message message) {
+	public void delete(Connection connection, int userId) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -81,7 +81,7 @@ public class MessageDao {
 
 			ps = connection.prepareStatement(sql.toString());
 
-			ps.setInt(1, message.getUserId());
+			ps.setInt(1, userId);
 
 			ps.executeUpdate();
 		} catch (SQLException e) {
@@ -119,7 +119,7 @@ public class MessageDao {
 	}
 
 	//つぶやき編集のためにidとuser_idが紐づくつぶやき参照
-	public Message select(Connection connection, Message messageId) {
+	public Message select(Connection connection, int messageId) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -134,7 +134,7 @@ public class MessageDao {
 			ps = connection.prepareStatement(sql.toString());
 
 			//バインド変数へserviceから受け取ったmessageの値を入れる
-			ps.setInt(1, messageId.getUserId());
+			ps.setInt(1, messageId);
 
 			//SQL実行
 			ResultSet rs = ps.executeQuery();
@@ -155,7 +155,7 @@ public class MessageDao {
 	}
 
 	//つぶやきを編集した内容に更新
-	public void Update(Connection connection, Message message) {
+	public void update(Connection connection, Message message) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -167,9 +167,11 @@ public class MessageDao {
 			StringBuilder sql = new StringBuilder();
 			//idとuser_idが紐づくレコードのtextを更新
 			sql.append("UPDATE messages SET ");
-			sql.append("  text = ?");
+			sql.append("  text = ?, ");
+			//日付もアップデート
+			sql.append("  updated_date = CURRENT_TIMESTAMP ");
 			sql.append("WHERE ");
-			sql.append("  id = ?");
+			sql.append("  id = ? ");
 
 			ps = connection.prepareStatement(sql.toString());
 

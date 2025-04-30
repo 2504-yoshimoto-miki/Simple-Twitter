@@ -95,7 +95,7 @@ public class MessageService {
 		}
 	}
 
-	public void delete(Message message) {
+	public void delete(int userId) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -105,7 +105,7 @@ public class MessageService {
 		Connection connection = null;
 		try {
 			connection = getConnection();
-			new MessageDao().delete(connection, message);
+			new MessageDao().delete(connection, userId);
 			commit(connection);
 		} catch (RuntimeException e) {
 			rollback(connection);
@@ -122,7 +122,7 @@ public class MessageService {
 		}
 	}
 
-	public Message select(Message messageId) {
+	public Message select(int messageId) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -160,7 +160,7 @@ public class MessageService {
 		Connection connection = null;
 		try {
 			connection = getConnection();
-			new MessageDao().Update(connection, message);
+			new MessageDao().update(connection, message);
 			commit(connection);
 		} catch (RuntimeException e) {
 			rollback(connection);
