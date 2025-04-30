@@ -67,7 +67,7 @@ public class MessageDao {
         }
     }
 
-	public void delete(Connection connection, int userId) {
+	public void delete(Connection connection, int id) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
@@ -81,7 +81,7 @@ public class MessageDao {
 
 			ps = connection.prepareStatement(sql.toString());
 
-			ps.setInt(1, userId);
+			ps.setInt(1, id);
 
 			ps.executeUpdate();
 		} catch (SQLException e) {
