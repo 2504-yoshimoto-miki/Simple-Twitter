@@ -139,9 +139,12 @@ public class MessageDao {
 			//SQL実行
 			ResultSet rs = ps.executeQuery();
 			List<Message> messages = toMessage(rs);
-			//edit.jspのテキストボックスに（編集前の）つぶやき表示が必要
-			//→戻り値
-			return messages.get(0);
+
+			if (messages.isEmpty()) {
+				return null;
+			} else {
+				return messages.get(0);
+			}
 		} catch (SQLException e) {
 		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
             throw new SQLRuntimeException(e);
