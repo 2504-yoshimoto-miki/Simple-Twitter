@@ -40,7 +40,7 @@ public class EditServlet extends HttpServlet {
 		String id = request.getParameter("id");
 
 		//IDが数字かどうか&URLのID削除したとき
-		if ((!id.matches("^[0-9]+$")) && StringUtils.isBlank(id)) {
+		if (StringUtils.isBlank(id) || !id.matches("^[0-9]+$")) {
 			List<String> errorMessages = new ArrayList<String>();
 
 			errorMessages.add("不正なパラメータが入力されました");
@@ -57,18 +57,8 @@ public class EditServlet extends HttpServlet {
 		Message message = new MessageService().select(messageId);
 
 		//URLに存在しないつぶやきのIDが入力されたらエラーメッセージ
-		if (message == null) {
-			List<String> errorMessages = new ArrayList<String>();
-
-			errorMessages.add("不正なパラメータが入力されました");
-
-			session.setAttribute("errorMessages", errorMessages);
-			response.sendRedirect("./");
-			return;
-		}
-
 		User loginUser = (User) session.getAttribute("loginUser");
-		if (message.getUserId() != loginUser.getId()) {
+		if (message == null || message.getUserId() != loginUser.getId()) {
 			List<String> errorMessages = new ArrayList<String>();
 
 			errorMessages.add("不正なパラメータが入力されました");
