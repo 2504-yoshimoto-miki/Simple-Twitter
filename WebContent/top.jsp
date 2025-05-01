@@ -90,6 +90,18 @@
 							</form>
 						</c:if>
 					</div>
+					<div>
+					<!-- 返信欄 -->
+						<form action="comment" method="post">
+							返信<br />
+							<textarea name="text" cols="100" rows="5" class="comment-box"></textarea>
+							<br /> <input name="id" value="${message.id}" type="hidden" >
+							<input type="submit" value="返信">（140文字まで）
+						</form>
+					</div>
+					<div class="comments">
+					<!-- 返信した内容をここに表示 -->
+					</div>
 				</div>
 			</c:forEach>
 		</div>
