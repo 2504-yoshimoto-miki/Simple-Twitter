@@ -9,7 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import chapter6.beans.Comment;
+import chapter6.beans.UserComment;
 import chapter6.dao.CommentDao;
+import chapter6.dao.UserCommentDao;
 import chapter6.logging.InitApplication;
 
 public class CommentService {
@@ -49,19 +51,21 @@ public class CommentService {
 		}
 	}
 
-	public List<Comment> select() {
+	public List<UserComment> select() {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
 
+		final int LIMIT_NUM = 1000;
 		Connection connection = null;
 		try {
 			connection = getConnection();
-			new CommentDao().select(connection);
+			List<UserComment> comment = new UserCommentDao().select(connection, LIMIT_NUM);
 			commit(connection);
 
+			return comment;
 		} catch (RuntimeException e) {
 			rollback(connection);
 			log.log(Level.SEVERE, new Object() {
